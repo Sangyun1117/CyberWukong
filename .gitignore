@@ -56,3 +56,6 @@ Plugins/*/Saved/
 
 # Gemini CLI
 .gemini/
+
+# Ignore Visual Studio cache and settings
+.vs/
