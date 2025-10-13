@@ -53,3 +53,6 @@ Plugins/*/Intermediate/
 Plugins/*/Binaries/
 Plugins/*/DerivedDataCache/
 Plugins/*/Saved/
+
+# Gemini CLI
+.gemini/
