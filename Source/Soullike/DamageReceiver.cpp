@@ -2,33 +2,49 @@
 
 
 #include "DamageReceiver.h"
+#include "TimerManager.h"
 
-// Sets default values for this component's properties
-UDamageReceiver::UDamageReceiver()
+void UDamageReceiver::SetHp(float MaxHp)
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	MaxHealthPower = MaxHp;
+	CurrentHealthPower = MaxHp;
+}
 
-	// ...
+void UDamageReceiver::OnDamageReceived(float Damage)
+{
+	if (!bIsVulnerable || Damage <= 0.f)
+	{
+		return;
+	}
+
+	// 데미지 적용
+	CurrentHealthPower -= Damage;
+	CurrentHealthPower = FMath::Clamp(CurrentHealthPower, 0.f, MaxHealthPower);
+
+	// 체력 변경 이벤트 호출
+	OnHealthPowerChanged.Broadcast(CurrentHealthPower, MaxHealthPower);
+
+	// 죽음 처리
+	if (CurrentHealthPower <= 0.f)
+	{
+		CurrentHealthPower = 0.f;
+		OnDead.Broadcast();
+	}
+
+	// 피격 후 무적 상태
+	bIsVulnerable = false;
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReturnToVulnerable, this, &UDamageReceiver::ReturnToVulnerable, InvulnerableTime, false);
+	}
+
+}
+
+void UDamageReceiver::ReturnToVulnerable()
+{
+	bIsVulnerable = true;
 }
 
 
-// Called when the game starts
-void UDamageReceiver::BeginPlay()
-{
-	Super::BeginPlay();
 
-	// ...
-	
-}
-
-
-// Called every frame
-void UDamageReceiver::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 
