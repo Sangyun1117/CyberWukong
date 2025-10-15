@@ -46,7 +46,6 @@ desktop.ini
 # Unreal specific
 *.generated.*
 *.Target.cs
-*.Build.cs
 
 # Plugins (if you use third-party ones, keep source only)
 Plugins/*/Intermediate/

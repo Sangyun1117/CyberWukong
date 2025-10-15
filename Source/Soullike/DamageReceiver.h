@@ -30,10 +30,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	void OnDamageReceived(float Damage);
 
-protected:
 	//최대체력을 설정해주는 함수
 	UFUNCTION(BlueprintCallable)
 	void SetHp(float MaxHp);
+
+protected:
 
 	//일정 시간 후 무적 상태 해제
 	void ReturnToVulnerable();
