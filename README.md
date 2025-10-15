@@ -9,7 +9,8 @@
 ---
 
 ## 🖼️ 데모 / 스크린샷
-이미지 추가 예정
+
+![Image](https://github.com/user-attachments/assets/f293eaae-86fe-451e-bcff-4d07438f249d)
 
 ---
 
