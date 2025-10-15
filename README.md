@@ -54,6 +54,7 @@
 - (트리거박스 좌표 - 플레이어 좌표) 진행 방향 벡터와 트리거 박스 방향 벡터를 내적함.
 - 내적은 결과가 양수면 정방향, 음수면 역방향
 - BeginOverlap과 EndOverlap 시 방향 판단 실행. 정방향이면 2층, 역 방향이면 1층처럼 변수로 층 설정
+
 ![Image](https://github.com/user-attachments/assets/b02fe0f8-99a5-446e-9de1-757807b8bf8f)
 
 ## 🚀 향후 계획
