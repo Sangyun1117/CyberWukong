@@ -46,7 +46,7 @@
 - 층이 바뀌는 부분에 트리거 박스 설치
 - 플레이어와 트리거 박스가 Begin Overlap 되면 미니맵 변경
 - 문제점: 트리거 박스 내에서 방향을 바꿔 되돌아가면 잘못된 층으로 판단
-<img width="1762" height="801" alt="Image" src="https://github.com/user-attachments/assets/d369a461-19f5-4e8d-aa8d-20df0c38e155" />
+<img width="881" height="401" alt="Image" src="https://github.com/user-attachments/assets/82b6e327-4dd7-4045-808d-f873427f0244" />
 
 💡 해결 방법
 - 내적을 이용해 진행방향 판단.
