@@ -12,6 +12,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PlayerHUD.h"
+#include "InteractionText.h"
 
 AWukong::AWukong()
 {
@@ -47,6 +48,7 @@ void AWukong::Tick(float DeltaTime)
 
 }
 
+//키 바인딩
 void AWukong::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -55,15 +57,17 @@ void AWukong::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		Input->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AWukong::OnHitMove);
 		Input->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AWukong::OnHitLook);
 		Input->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &AWukong::OnHitJump);
-		Input->BindAction(IA_Roll, ETriggerEvent::Triggered, this, &AWukong::OnHitRollInput);
+		Input->BindAction(IA_Roll, ETriggerEvent::Triggered, this, &AWukong::OnHitRoll);
 		Input->BindAction(IA_Attack, ETriggerEvent::Triggered, this, &AWukong::OnHitAttack);
+		Input->BindAction(IA_Slam, ETriggerEvent::Triggered, this, &AWukong::OnHitSlam);
+		
 	}
 }
 
 //사용자 키입력
 void AWukong::OnHitMove(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Log, TEXT("Move"));
+	//UE_LOG(LogTemp, Log, TEXT("Move"));
 	if (!bCanMove || WukongState != EPlayerState::Peace) {
 		return;
 	}
@@ -102,38 +106,68 @@ void AWukong::OnHitJump(const FInputActionValue& Value)
 	Jump();
 }
 
-void AWukong::OnHitRollInput(const FInputActionValue& Value)
-{
-	OnHitRoll(Value);
-}
-
-bool AWukong::OnHitRoll_Implementation(const FInputActionValue& Value)
+void AWukong::OnHitRoll(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Log, TEXT("Roll"));
 	if (WukongState != EPlayerState::Peace || GetCharacterMovement()->IsFalling()) {
-		return false;
+		return;
 	}
 	switch (AttackState)
 	{
 	case EAttackState::Hit:
 	case EAttackState::SlamPush:
 	case EAttackState::SlamDown:
-		return false;
-	case EAttackState::None:
+		return;
+	default:
 		NextCombo = NAME_None;
+		ComboCount = 0;
+		SetState(EPlayerState::Roll);
+		PlayMontage(EEffectType::Roll);
 		break;
 	}
-
-	SetState(EPlayerState::Roll);
-	return true;
 }
 
 void AWukong::OnHitAttack(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Log, TEXT("Attack"));
+	if (WukongState != EPlayerState::Peace) {
+		return;
+	}
 
+	switch (AttackState)
+	{
+	case EAttackState::Hit:
+	case EAttackState::SlamPush:
+	case EAttackState::SlamDown:
+		return;
+	case EAttackState::None:
+	case EAttackState::Recovery:
+		ComboCount = 1;
+		NextCombo = "Attack1";
+		PlayMontage(EEffectType::Attack);
+		break;
+	case EAttackState::Combo:
+		++ComboCount;
+		NextCombo = FName(*FString::Printf(TEXT("Attack%d"), ComboCount));
+		PlayMontage(EEffectType::Attack);
+		break;
+	}
+	if (NextCombo == "Attack5") {
+		// Z축 방향으로 점프
+		FVector Impulse = FVector(0.0f, 0.0f, 500.0f);
+		GetCharacterMovement()->AddImpulse(Impulse, true);
+	}
 }
 
+void AWukong::OnHitSlam(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("Slam"));
+	if (WukongState != EPlayerState::Peace) {
+		return;
+	}
+
+
+}
 
 
 void AWukong::OnHpChanged(float HealthPower, float MaxHealthPower) {
@@ -162,5 +196,22 @@ void AWukong::SetState(EPlayerState NewState)
 	if (WukongState != EPlayerState::Dead) {
 		WukongState = NewState;
 	}
+}
+
+void AWukong::ShowInteraction(FText NewText)
+{
+	if (!InteractionText) return;
+	InteractionText->SetText(NewText);
+	// 기존 타이머가 돌고 있다면 취소
+	GetWorldTimerManager().ClearTimer(InteractionTimerHandle);
+
+	// 3초 뒤 텍스트 삭제
+	GetWorldTimerManager().SetTimer(InteractionTimerHandle, [this]()
+		{
+			if (InteractionText)
+			{
+				InteractionText->SetText(FText::GetEmpty());
+			}
+		}, 3.0f, false);
 }
 

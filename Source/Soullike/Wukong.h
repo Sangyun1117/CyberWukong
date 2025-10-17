@@ -14,6 +14,8 @@ class UUserWidget;
 class USphereComponent;
 class UCapsuleComponent;
 class UPlayerHUD;
+class UInteractionText;
+
 UCLASS()
 class SOULLIKE_API AWukong : public ACharacter
 {
@@ -30,11 +32,12 @@ protected:
 	void OnHitMove(const FInputActionValue& Value);
 	void OnHitLook(const FInputActionValue& Value);
 	void OnHitJump(const FInputActionValue& Value);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Input")
-	bool OnHitRoll(const FInputActionValue& Value);
-	bool OnHitRoll_Implementation(const FInputActionValue& Value);
+	void OnHitRoll(const FInputActionValue& Value);
 	void OnHitAttack(const FInputActionValue& Value);
+	void OnHitSlam(const FInputActionValue& Value);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input")
+	void PlayMontage(EEffectType Effect);
 
 private:
 
@@ -47,8 +50,8 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void SetState(EPlayerState NewState);
 
-	//반환형이 void가 아니면 BindAction을 못하므로 사용하는 래퍼함수
-	void OnHitRollInput(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
+	void ShowInteraction(FText NewText);
 
 protected:
 	//입력 매핑 변수
@@ -80,12 +83,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Collisions")
 	USphereComponent* SlamDownCollision;
 
-	//Player HUD
+	//UI
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	UPlayerHUD* PlayerHUD;
-
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-	//TSubclassOf<UUserWidget> PlayerHUDClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
+	UInteractionText* InteractionText;
 
 	//Stat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
@@ -97,7 +99,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	float CurrentEp = 300.0f;
 
-	
+
 	//State
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "State")
 	EPlayerState WukongState;
@@ -107,5 +109,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "State")
 	FName NextCombo;
 	UPROPERTY(BlueprintReadWrite, Category = "State")
+	int32 ComboCount = 0;
+	UPROPERTY(BlueprintReadWrite, Category = "State")
 	bool bCanMove = true;
+
+private:
+	FTimerHandle InteractionTimerHandle;
 };

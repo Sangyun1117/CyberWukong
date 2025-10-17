@@ -20,3 +20,11 @@ enum class EAttackState : uint8
 	SlamPush	UMETA(DisplayName = "SlamPush"),
 	SlamDown	UMETA(DisplayName = "SlamDown"),
 };
+UENUM(BlueprintType)
+enum class EEffectType : uint8
+{
+	Attack		UMETA(DisplayName = "Attack"),
+	Roll		UMETA(DisplayName = "Roll"),
+	SlamPush	UMETA(DisplayName = "SlamPush"),
+	SlamDown	UMETA(DisplayName = "SlamDown"),
+};
