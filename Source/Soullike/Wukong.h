@@ -14,6 +14,7 @@ class UUserWidget;
 class USphereComponent;
 class UCapsuleComponent;
 class UPlayerHUD;
+class UMinimap;
 class UInteractionText;
 
 UCLASS()
@@ -25,6 +26,9 @@ public:
 	AWukong();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//미니맵 변경
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void MinimapChange(EMapSection NewSection);
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,9 +40,10 @@ protected:
 	void OnHitAttack(const FInputActionValue& Value);
 	void OnHitSlam(const FInputActionValue& Value);
 
+	//몽타주 재생
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input")
 	void PlayMontage(EEffectType Effect);
-
+	
 private:
 
 	UFUNCTION()
@@ -87,13 +92,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	UPlayerHUD* PlayerHUD;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
+	UMinimap* Minimap;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	UInteractionText* InteractionText;
 
 	//Stat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
-	float MaxHp = 100.0f;
+	float MaxHp = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
-	float CurrentHp = 100.0f;
+	float CurrentHp = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	float MaxEp = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
@@ -112,6 +119,9 @@ protected:
 	int32 ComboCount = 0;
 	UPROPERTY(BlueprintReadWrite, Category = "State")
 	bool bCanMove = true;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EMapSection NowMapSection = EMapSection::SewerB2F;
 
 private:
 	FTimerHandle InteractionTimerHandle;

@@ -12,6 +12,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PlayerHUD.h"
+#include "Minimap.h"
 #include "InteractionText.h"
 
 AWukong::AWukong()
@@ -169,6 +170,12 @@ void AWukong::OnHitSlam(const FInputActionValue& Value)
 
 }
 
+
+void AWukong::MinimapChange(EMapSection NewSection)
+{
+	NowMapSection = NewSection;
+	Minimap->MinimapChange(NowMapSection);
+}
 
 void AWukong::OnHpChanged(float HealthPower, float MaxHealthPower) {
 	UE_LOG(LogTemp, Log, TEXT("HpChanged"));

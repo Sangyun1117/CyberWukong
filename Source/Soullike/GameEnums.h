@@ -28,3 +28,10 @@ enum class EEffectType : uint8
 	SlamPush	UMETA(DisplayName = "SlamPush"),
 	SlamDown	UMETA(DisplayName = "SlamDown"),
 };
+UENUM(BlueprintType)
+enum class EMapSection : uint8
+{
+	SewerB1F			UMETA(DisplayName = "SewerB1F"),
+	SewerB1FtoB2F		UMETA(DisplayName = "SewerB1FtoB2F"),
+	SewerB2F			UMETA(DisplayName = "SewerB2F"),
+};
