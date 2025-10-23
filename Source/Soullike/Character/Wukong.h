@@ -16,6 +16,8 @@ class UCapsuleComponent;
 class UPlayerHUD;
 class UMinimap;
 class UInteractionText;
+class AMonster;
+class UMaterialInstanceDynamic;
 
 UCLASS()
 class SOULLIKE_API AWukong : public ACharacter
@@ -27,8 +29,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	//미니맵 변경
-	UFUNCTION(BlueprintCallable, Category = "Input")
+	UFUNCTION(BlueprintCallable, Category = "UI")
 	void MinimapChange(EMapSection NewSection);
+
+	UFUNCTION(BlueprintCallable, Category = "Collision")
+	void OnAttackCollisionChanged(bool bEnabled);
+	UFUNCTION(BlueprintCallable, Category = "Collision")
+	void OnSlamPushCollisionChanged(bool bEnabled);
+	UFUNCTION(BlueprintCallable, Category = "Collision")
+	void OnSlamDownCollisionChanged(bool bEnabled);
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	void GetKey();
 
 protected:
 	virtual void BeginPlay() override;
@@ -41,9 +52,15 @@ protected:
 	void OnHitSlam(const FInputActionValue& Value);
 
 	//몽타주 재생
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Animation")
 	void PlayMontage(EEffectType Effect);
-	
+	//SlamPush시 벽 충돌 체크
+	UFUNCTION(BlueprintCallable)
+	void SlamPushWallCheck();
+	//플레이어를 가리는 장애물을 투명화 시킴
+	UFUNCTION(BlueprintCallable)
+	void TransparencyDecorations();
+
 private:
 
 	UFUNCTION()
@@ -55,11 +72,15 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void SetState(EPlayerState NewState);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ShowInteraction(FText NewText);
 
 	UFUNCTION()
 	void OnAttackBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnSlamPushBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnSlamDownBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 
 protected:
@@ -129,7 +150,17 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EMapSection NowMapSection = EMapSection::SewerB2F;
+	UPROPERTY(BlueprintReadWrite, Category = "State")
+	bool bIsKey = false;
 
+	//Slam
+	UPROPERTY(BlueprintReadWrite, Category = "Slam")
+	AMonster* SlemdMonster;
+	UPROPERTY(BlueprintReadWrite, Category = "Slam")
+	bool bIsSlamAnim = false;
+
+	//투명화 타겟
+	TArray<UMaterialInstanceDynamic*> TransparentTargets;
 private:
 	FTimerHandle InteractionTimerHandle;
 };

@@ -26,7 +26,7 @@ enum class EEffectType : uint8
 	Attack		UMETA(DisplayName = "Attack"),
 	Roll		UMETA(DisplayName = "Roll"),
 	SlamPush	UMETA(DisplayName = "SlamPush"),
-	SlamDown	UMETA(DisplayName = "SlamDown"),
+	SlamPushStop	UMETA(DisplayName = "SlamPushStop"),
 };
 UENUM(BlueprintType)
 enum class EMapSection : uint8
