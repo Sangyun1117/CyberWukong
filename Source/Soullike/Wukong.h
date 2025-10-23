@@ -58,6 +58,10 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void ShowInteraction(FText NewText);
 
+	UFUNCTION()
+	void OnAttackBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
 protected:
 	//입력 매핑 변수
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
@@ -105,7 +109,10 @@ protected:
 	float MaxEp = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	float CurrentEp = 300.0f;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
+	float SlamEp = 30.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
+	float BaseDamage = 10.0f;
 
 	//State
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "State")
