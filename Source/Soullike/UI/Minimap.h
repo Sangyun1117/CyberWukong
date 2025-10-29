@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GameEnums.h"
+#include "Core/GameEnums.h"
 #include "Minimap.generated.h"
 
 /**

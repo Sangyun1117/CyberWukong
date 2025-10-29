@@ -6,7 +6,7 @@
 #include "InputMappingContext.h"
 #include "InputAction.h"
 #include "GameFramework/Character.h"
-#include "GameEnums.h"
+#include "Core/GameEnums.h"
 #include "Wukong.generated.h"
 
 class UDamageReceiver;

@@ -1,38 +1,47 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Monster.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Core/DamageReceiver.h"
+#include "Components/SphereComponent.h"
+#include "Perception/PawnSensingComponent.h"
+
 // Sets default values
 AMonster::AMonster()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	//ë°ë¯¸ì§€ ë¦¬ì‹œë²„
+	DamageReceiver = CreateDefaultSubobject<UDamageReceiver>(TEXT("DamageReceiver"));
 
+	//í° ê°ì§€ ì»´í¬ë„ŒíŠ¸
+	PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComponent"));
+	PawnSensing->SightRadius = 800.f;                // ì‹œì•¼ ë°˜ê²½
+	PawnSensing->SetPeripheralVisionAngle(45.f);     // ì¢Œìš° ì‹œì•¼ê°
+	PawnSensing->bHearNoises = true;                 // ì†Œë¦¬ ê°ì§€ í™œì„±í™”
 }
 
 void AMonster::StartSlamKnockback()
 {
-	//¸ó½ºÅÍÀ§Ä¡¸¦ ¾à°£ ¿Ã¸°´Ù. ³Ë¹é½Ã ºÀ ³ôÀÌº¸´Ù ¸ó½ºÅÍ°¡ Å« °æ¿ì ¶¥¿¡ ºÎµúÈ÷´Â ÄÉÀÌ½º ¹æÁö
+	//ëª¬ìŠ¤í„°ìœ„ì¹˜ë¥¼ ì•½ê°„ ì˜¬ë¦°ë‹¤. ë„‰ë°±ì‹œ ë´‰ ë†’ì´ë³´ë‹¤ ëª¬ìŠ¤í„°ê°€ í° ê²½ìš° ë•…ì— ë¶€ë”ªíˆëŠ” ì¼€ì´ìŠ¤ ë°©ì§€
 	AddActorWorldOffset(FVector(0, 0, 30), false, nullptr, ETeleportType::None);
-	//ÀÌµ¿À» ºñÈ°¼ºÈ­ÇÑ´Ù.
+	//ì´ë™ì„ ë¹„í™œì„±í™”í•œë‹¤.
 	GetCharacterMovement()->DisableMovement();
-	//³Ë¹é»óÅÂ·Î ¸¸µé¾î Tick()¿¡¼­ ºÀ°ú ¸ó½ºÅÍ°¡ °°ÀÌ ¿òÁ÷ÀÌµµ·Ï ÇÑ´Ù.
+	//ë„‰ë°±ìƒíƒœë¡œ ë§Œë“¤ì–´ Tick()ì—ì„œ ë´‰ê³¼ ëª¬ìŠ¤í„°ê°€ ê°™ì´ ì›€ì§ì´ë„ë¡ í•œë‹¤.
 	bIsSlamKnockback = true;
 }
 
 void AMonster::EndSlamKnockback()
 {
-	//ÀÌµ¿ È°¼ºÈ­
+	//ì´ë™ í™œì„±í™”
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking, 0);
 	bIsSlamKnockback = false;
-	//¸ó½ºÅÍ¸¦ ¾à°£ ¶ç¿î´Ù.
+	//ëª¬ìŠ¤í„°ë¥¼ ì•½ê°„ ë„ìš´ë‹¤.
 	GetCharacterMovement()->AddImpulse(FVector(0, 0, 300), true);
 }
 
-// Called when the game starts or when spawned
 void AMonster::BeginPlay()
 {
 	Super::BeginPlay();
@@ -44,15 +53,15 @@ void AMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (bIsSlamKnockback) {
-		// ÇÃ·¹ÀÌ¾î Æù¿¡¼­ ½ºÄÌ·¹Å» ¸Ş½Ã °¡Á®¿À±â
+		// í”Œë ˆì´ì–´ í°ì—ì„œ ìŠ¤ì¼ˆë ˆíƒˆ ë©”ì‹œ ê°€ì ¸ì˜¤ê¸°
 		APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		if (!PlayerPawn) return;
 		USkeletalMeshComponent* SkeletalMesh = PlayerPawn->FindComponentByClass<USkeletalMeshComponent>();
 		if (!SkeletalMesh) return;
-		//¼ÒÄÏ À§Ä¡ °¡Á®¿À±â
+		//ì†Œì¼“ ìœ„ì¹˜ ê°€ì ¸ì˜¤ê¸°
 		FVector BongEndSocketLocation = SkeletalMesh->GetSocketLocation(TEXT("weapon_B_front_r_socket"));
 		FVector NewLocation(BongEndSocketLocation.X, BongEndSocketLocation.Y, GetActorLocation().Z);
-		//¸ó½ºÅÍ À§Ä¡ ¼ÒÄÏ À§Ä¡·Î ÀÌµ¿
+		//ëª¬ìŠ¤í„° ìœ„ì¹˜ ì†Œì¼“ ìœ„ì¹˜ë¡œ ì´ë™
 		SetActorLocation(NewLocation, true, nullptr, ETeleportType::None);
 	}
 

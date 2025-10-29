@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
-#include "GameEnums.h"
+#include "Core/GameEnums.h"
 #include "MapLayerTriggerBox.generated.h"
 
 
