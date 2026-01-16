@@ -1,0 +1,4 @@
+,HealthPower,Attack,Defence,WalkSpeed,ChaseSpeed,SkillMultiplier1,SkillMultiplier2,SkillMultiplier3,SkillRange1,SkillRange2,SkillRange3
+정찰견-MK2,50,15,0,400,500,1,1,1,100,100,100
+정찰견-MK3,50,15,0,400,500,1,1,1,100,100,100
+하수도_관리자,100,20,0,300,500,1,2,3,150,150,800
