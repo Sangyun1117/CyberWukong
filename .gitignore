@@ -37,6 +37,8 @@ desktop.ini
 *.sublime-project
 
 # Generated project files
+*.sln
+.vsconfig
 *.xcodeproj
 *.xcworkspace
 *.xcconfig
@@ -46,7 +48,6 @@ desktop.ini
 
 # Unreal specific
 *.generated.*
-*.Target.cs
 
 # Plugins (if you use third-party ones, keep source only)
 Plugins/*/Intermediate/

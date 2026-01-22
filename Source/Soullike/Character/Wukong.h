@@ -121,6 +121,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "UI")
 	UInteractionText* InteractionText;
 
+	//시스템
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "System")
+	float MouseSensitivity = 0.5f;
+
+
 	//Stat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	float MaxHp = 300.0f;
