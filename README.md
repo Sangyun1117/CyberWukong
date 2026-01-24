@@ -9,9 +9,7 @@
 ---
 
 ## 🖼️ 데모 / 스크린샷
-<div align="center">
-  ![Image](https://github.com/user-attachments/assets/f293eaae-86fe-451e-bcff-4d07438f249d)
-</div>
+![Image](https://github.com/user-attachments/assets/f293eaae-86fe-451e-bcff-4d07438f249d)
 ---
 
 ## ⚙️ 개발 환경
@@ -31,7 +29,7 @@
 ---
 
 ## 📌 게임 방법
-<div align="center">
+
 | 조작 | 동작 |
 |------|------|
 | **W / A / S / D** | 이동 |
@@ -39,7 +37,7 @@
 | **Ctrl (왼쪽)** | 회피 (구르기) |
 | **마우스 좌클릭** | 기본 공격 (콤보 5회) |
 | **Q** | 스킬 사용 (2단점프 시 다른 모션) |
-</div>
+
 ## 😒 개발 과정 & 어려웠던 점
 
 ### 1. 층 판단 로직
